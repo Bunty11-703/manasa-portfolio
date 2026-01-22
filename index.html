@@ -96,33 +96,6 @@
       </div>
     </a>
 
-    <!-- Project 02 -->
-    <a 
-  href="https://your-fairlens-project-link.com" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  class="block"
->
-  <div class="project-item border-b border-white/10 pb-8 group transition-all duration-300 cursor-pointer">
-    
-    <span class="text-xs uppercase tracking-widest text-indigo-500 font-semibold opacity-70 group-hover:opacity-100 transition-opacity">
-      Visit the Project →
-    </span>
-
-    <div class="flex justify-between items-start mt-2">
-      <h3 class="text-4xl font-bold group-hover:text-indigo-400 transition-colors">
-        FairLens – AI Decision Ethics Visualizer
-      </h3>
-      <span class="text-xl font-bold italic text-indigo-500">01</span>
-    </div>
-
-    <p class="mt-4 text-slate-400 text-sm max-w-2xl leading-relaxed group-hover:text-slate-200 transition-colors">
-      Built an explainable AI system that predicts loan approval probabilities while analyzing fairness and bias across demographic groups. Focused on transparency, accountability, and real-world ethical AI decision-making using Python, machine learning, and a Flask-based backend.
-    </p>
-
-  </div>
-</a>
-
     <!-- Project 03 -->
     <a 
       href="    https://gdp-dashboard   -template.streamlit.app/" 
@@ -139,7 +112,7 @@
           <h3 class="text-4xl font-bold group-hover:text-indigo-400 transition-colors">
             Global GDP Dashboard
           </h3>
-          <span class="text-xl font-bold italic text-indigo-500">03</span>
+          <span class="text-xl font-bold italic text-indigo-500">02</span>
         </div>
 
         <p class="mt-4 text-slate-400 text-sm max-w-2xl leading-relaxed group-hover:text-slate-200 transition-colors">
@@ -160,12 +133,6 @@
                     <p class="text-slate-500 mb-2">February-2025</p>
                     <p class="text-slate-400 text-sm max-w-2xl">An AI ML internship focuses on building intelligent systems that learn and make decisions on their own.</p>
                 </div>
-                <div class="border-l-2 border-slate-700 pl-8">
-                    <h3 class="text-3xl font-bold">AI Intern | CodeClause</h3>
-                    <p class="text-slate-500 mb-2">INTERNSHIP PROJECT</p>
-                    <p class="text-slate-400 text-sm max-w-2xl">Facial Recognition System using OpenCV and TensorFlow for real-time identification.</p>
-                </div>
-            </div>
         </section>
 
         <section id="simulations">
@@ -306,37 +273,79 @@
 </footer>
 
     <script>
-        // --- 1. THREE.JS BACKGROUND ---
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 2000;
-        const posArray = new Float32Array(particlesCount * 3);
-        for(let i=0; i < particlesCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 10; }
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        const material = new THREE.PointsMaterial({ size: 0.005, color: '#6366f1' });
-        const particlesMesh = new THREE.Points(particlesGeometry, material);
-        scene.add(particlesMesh);
-        camera.position.z = 3;
+        // --- SCENE SETUP ---
+  const scene = new THREE.Scene();
 
-        function animate() {
-  requestAnimationFrame(animate);
+  const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
+  camera.position.z = 3;
 
-  particlesMesh.rotation.y += 0.0008;
-  particlesMesh.rotation.x += 0.0004;
+  const renderer = new THREE.WebGLRenderer({
+    canvas: document.getElementById('bg-canvas'),
+    alpha: true,
+    antialias: true
+  });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  const positions = particlesGeometry.attributes.position.array;
-  for (let i = 2; i < positions.length; i += 3) {
-    positions[i] += 0.002;
-    if (positions[i] > 5) positions[i] = -5;
+  // --- PARTICLES ---
+  const particlesCount = 2000;
+  const particlesGeometry = new THREE.BufferGeometry();
+  const posArray = new Float32Array(particlesCount * 3);
+
+  for (let i = 0; i < particlesCount * 3; i++) {
+    posArray[i] = (Math.random() - 0.5) * 10;
   }
-  particlesGeometry.attributes.position.needsUpdate = true;
 
-  renderer.render(scene, camera);
-}
+  particlesGeometry.setAttribute(
+    'position',
+    new THREE.BufferAttribute(posArray, 3)
+  );
 
+  const particlesMaterial = new THREE.PointsMaterial({
+    size: 0.006,
+    color: '#6366f1',
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const particlesMesh = new THREE.Points(
+    particlesGeometry,
+    particlesMaterial
+  );
+  scene.add(particlesMesh);
+
+  // --- ANIMATION LOOP ---
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Smooth rotation
+    particlesMesh.rotation.y += 0.0008;
+    particlesMesh.rotation.x += 0.0004;
+
+    // Floating depth movement
+    const positions = particlesGeometry.attributes.position.array;
+    for (let i = 2; i < positions.length; i += 3) {
+      positions[i] += 0.002;
+      if (positions[i] > 5) positions[i] = -5;
+    }
+    particlesGeometry.attributes.position.needsUpdate = true;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // --- RESIZE HANDLER ---
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 
         // --- 2. GSAP REVEAL ANIMATIONS ---
         gsap.registerPlugin(ScrollTrigger);
@@ -444,6 +453,6 @@ window.addEventListener('load', () => moveIndicator(document.querySelector('.act
     modal.classList.add("hidden");
     document.body.style.overflow = "auto";
   }
-    </script>
+</script>
 </body>
 </html>
